@@ -1,16 +1,18 @@
-# Kích thước bàn cờ và luật chơi
-BOARD_SIZE = 9  # Tối thiểu 9x9
-WIN_COUNT = 4   # Thắng 4 quân
+# ============================================================
+#  constants.py – Shared configuration for the Caro AI project
+# ============================================================
 
-# MAX là Máy (O), MIN là Người (X), ô trống là dấu chấm (.)
-# Không xét luật chặn hai đầu
-SCORES = {
-    'WIN': 10000,         # Máy có 4 quân liên tiếp
-    'LOSE': -10000,       # Người chơi có 4 quân liên tiếp
-    'AI_3_OPEN': 800,     # Máy có 3 quân, còn khả năng mở rộng
-    'PLAYER_3': -800,     # Người có 3 quân (ưu tiên chặn nên điểm âm lớn)
-    'AI_2': 10,           # Máy có 2 quân
-    'PLAYER_2': -20       # Người có 2 quân
-}
+BOARD_SIZE = 9          # Minimum 9x9
+EMPTY      = 0
+PLAYER_X   = 1          # Human (MIN)
+AI_O       = 2          # AI    (MAX)
+WIN_LEN    = 4          # 4 consecutive marks to win
+NEIGHBOR_RADIUS = 2     # Candidate moves within 2 squares of any piece
 
-MAX_DEPTH = 3  # Độ sâu tìm kiếm
+# --- Heuristic scores (highest priority first) ---
+SCORE_WIN      =  1_000_000   # AI 4-in-a-row
+SCORE_LOSE     = -1_000_000   # Human 4-in-a-row
+SCORE_ATTACK_3 =     10_000   # AI open-3
+SCORE_DEFEND_3 =    -50_000   # Human open-3 (block > attack)
+SCORE_ATTACK_2 =        100   # AI 2-streak
+SCORE_DEFEND_2 =       -150   # Human 2-streak
