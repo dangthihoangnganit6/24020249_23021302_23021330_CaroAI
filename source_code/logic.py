@@ -14,7 +14,7 @@ def check_in(board): #Xét xem ai thắng
         for column in range(BOARD_SIZE):
             if board[row][column] == EMPTY:
                 continue
-            for dr, dc in current_direction: # Với mỗi ô có quân cờ, máy sẽ lần lượt nhìn về 4 hướng (dr, dc)
+            for dr, dc in current_direction: # Với mỗi ô có quân cờ, máy sẽ lần lượt nhìn về 4 hướng (dr, dc: Độ dịch)
                 count = 1 #Bắt đầu đếm số lượng 'X'/'O' có trên bàn cờ
                 for i in range(1, WIN_COUNT):
                     new_row, new_column = row + dr*i, column + dc*i #Với i chạy từ 1-4, công thức để tính ra hàng mới, cột mới mà X/O đánh vào chính là: hàng/cột hiện tại + độ dịch hàng/cột * hệ số i
