@@ -29,7 +29,7 @@ def check_in(board): #Xét xem ai thắng
     
 def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai thắng
     winner = check_in(board)
-    human_piece += 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
+    human_piece = 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
     if winner == 'O':
         return SCORES['WIN']
     elif winner == 'X':
