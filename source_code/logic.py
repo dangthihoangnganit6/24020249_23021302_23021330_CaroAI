@@ -8,7 +8,7 @@ def get_valid_moves(board): #Trả về danh sách các ô trống còn lại
                 move.append([r, c]) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
     return move 
 
-def check_in(board): #Xét xem ai thắng
+def check_win(board): #Xét xem ai thắng
     current_direction = [[0, 1], [1, 0], [1, 1], [1, -1]] # Ngang, Dọc, Chéo chính, Chéo phụ
     for row in range(BOARD_SIZE):
         for column in range(BOARD_SIZE):
@@ -28,7 +28,7 @@ def check_in(board): #Xét xem ai thắng
         return 'Hoà'
     
 def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai thắng
-    winner = check_in(board)
+    winner = check_win(board)
     human_piece = 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
     if winner == 'O':
         return SCORES['WIN']
