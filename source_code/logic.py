@@ -18,7 +18,7 @@ def check_win(board): #Xét xem ai thắng
                 count = 1 #Bắt đầu đếm số lượng 'X'/'O' có trên bàn cờ
                 for i in range(1, WIN_COUNT):
                     new_row, new_column = row + dr*i, column + dc*i #Với i chạy từ 1-4, công thức để tính ra hàng mới, cột mới mà X/O đánh vào chính là: hàng/cột hiện tại + độ dịch hàng/cột * hệ số i
-                    if 0 <= new_row < BOARD_SIZE and 0 <= new_column < BOARD_SIZE:
+                    if 0 <= new_row < BOARD_SIZE and 0 <= new_column < BOARD_SIZE and board[new_row][new_column] == board[row][column]r:
                         count += 1
                     else:
                         break
