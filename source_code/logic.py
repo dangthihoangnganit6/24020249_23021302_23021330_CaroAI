@@ -26,6 +26,7 @@ def check_win(board): #Xét xem ai thắng
                     return board[row][column]
     if not get_valid_moves(board):
         return 'Hoà'
+    return None #TH bàn cờ bị đầy, chưa ăn 4
     
 def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai thắng
     winner = check_win(board)
