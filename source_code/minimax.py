@@ -6,7 +6,7 @@ from constants import EMPTY, SCORES, MAX_DEPTH
 xet_trang_thai = 0
 
 def minimax(board, depth, is_maximizing, ai_piece): #depth: độ sâu còn lại ; is_maximizing: Biến kiểu Đúng/Sai. Nếu là True, AI đang đóng vai chính mình (tìm điểm cao nhất). Nếu là False, AI đang giả vờ đóng vai đối thủ (tìm điểm thấp nhất để hại mình).
-    global xet_trang_thai #Mỗi lần AI "nghĩ" về một trạng thái bàn cờ mới, ta cộng 1 vào đây. Đây chính là con số "Số trạng thái đã xét"
+    global xet_trang_thai #Mỗi lần AI "nghĩ" về một trạng thái bàn cờ mới, cộng 1 vào đây. Đây chính là con số "Số trạng thái đã xét"
     xet_trang_thai += 1
     
     human_piece = 'O' if ai_piece == 'X' else 'X'
