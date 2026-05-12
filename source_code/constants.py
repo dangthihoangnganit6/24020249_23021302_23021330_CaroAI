@@ -1,6 +1,7 @@
 # Kích thước bàn cờ và luật chơi
 BOARD_SIZE = 9  # Tối thiểu 9x9
 WIN_COUNT = 4   # Thắng 4 quân
+EMPTY = '.'
 
 # MAX là Máy (O), MIN là Người (X), ô trống là dấu chấm (.)
 # Không xét luật chặn hai đầu
