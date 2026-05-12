@@ -5,7 +5,7 @@ def get_valid_moves(board): #Trả về danh sách các ô trống còn lại
     for row in range(BOARD_SIZE):
         for column in range(BOARD_SIZE):
             if board[row][column] == EMPTY: #Nếu thấy có ô trống trên bàn cờ
-                move.append((row, column)) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
+                move.append([row, column]) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
     return move 
 
 def check_win(board): #Xét xem ai thắng
@@ -18,21 +18,21 @@ def check_win(board): #Xét xem ai thắng
                 count = 1 #Bắt đầu đếm số lượng 'X'/'O' có trên bàn cờ
                 for i in range(1, WIN_COUNT):
                     new_row, new_column = row + dr*i, column + dc*i #Với i chạy từ 1-4, công thức để tính ra hàng mới, cột mới mà X/O đánh vào chính là: hàng/cột hiện tại + độ dịch hàng/cột * hệ số i
-                    if 0 <= new_row <= BOARD_SIZE and 0 <= new_column <= BOARD_SIZE:
+                    if 0 <= new_row < BOARD_SIZE and 0 <= new_column < BOARD_SIZE:
                         count += 1
                     else:
                         break
-                if count > WIN_COUNT:
+                if count >= WIN_COUNT:
                     return board[row][column]
     if not get_valid_moves(board):
         return 'Hoà'
     
 def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai thắng
     winner = check_win(board)
-    human_piece += 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
-    if winner == 'O':
+    human_piece = 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
+    if winner == ai_piece:
         return SCORES['WIN']
-    elif winner == 'X':
+    elif winner == human_piece:
         return SCORES['LOSE']
     elif winner == 'Hoà':
         return 0
