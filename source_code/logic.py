@@ -5,7 +5,7 @@ def get_valid_moves(board): #Trả về danh sách các ô trống còn lại
     for row in range(BOARD_SIZE):
         for column in range(BOARD_SIZE):
             if board[row][column] == EMPTY: #Nếu thấy có ô trống trên bàn cờ
-                move.append([row, column]) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
+                move.append((row, column)) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
     return move 
 
 def check_win(board): #Xét xem ai thắng
