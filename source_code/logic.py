@@ -1,11 +1,11 @@
-from constants import BOARD_SIZE, WIN_COUNT, SCORES
+from constants import BOARD_SIZE, WIN_COUNT, SCORES, EMPTY
 
 def get_valid_moves(board): #Trả về danh sách các ô trống còn lại
     move =[] #Tạo mảng trống
     for row in range(BOARD_SIZE):
         for column in range(BOARD_SIZE):
             if board[row][column] == EMPTY: #Nếu thấy có ô trống trên bàn cờ
-                move.append([r, c]) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
+                move.append([row, column]) #thêm ô trống đấy vào mảng để player có thể lựa chọn về sau (tức đưa node vào fringe để xét)
     return move 
 
 def check_win(board): #Xét xem ai thắng
@@ -14,7 +14,7 @@ def check_win(board): #Xét xem ai thắng
         for column in range(BOARD_SIZE):
             if board[row][column] == EMPTY:
                 continue
-            for dr, dc in current_direction: # Với mỗi ô có quân cờ, máy sẽ lần lượt nhìn về 4 hướng (dr, dc: Độ dịch)
+            for dr, dc in current_direction: # Với mỗi ô có quân cờ, máy sẽ lần lượt nhìn về 4 hướng (dr, dc)
                 count = 1 #Bắt đầu đếm số lượng 'X'/'O' có trên bàn cờ
                 for i in range(1, WIN_COUNT):
                     new_row, new_column = row + dr*i, column + dc*i #Với i chạy từ 1-4, công thức để tính ra hàng mới, cột mới mà X/O đánh vào chính là: hàng/cột hiện tại + độ dịch hàng/cột * hệ số i
@@ -29,7 +29,7 @@ def check_win(board): #Xét xem ai thắng
     
 def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai thắng
     winner = check_win(board)
-    human_piece = 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
+    human_piece += 'O' if ai_piece == 'X' else 'X' # Tự suy ra quân của người, rồi tự chọn quân cho mình
     if winner == 'O':
         return SCORES['WIN']
     elif winner == 'X':
@@ -50,7 +50,7 @@ def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai th
                 count = 1
                 for i in range(1, WIN_COUNT):
                     new_row, new_column = row + dr * i, column + dc * i
-                    if 0 <= nr < BOARD_SIZE and 0 <= nc < BOARD_SIZE and board[new_row][new_column] == player:
+                    if 0 <= new_row < BOARD_SIZE and 0 <= new_column < BOARD_SIZE and board[new_row][new_column] == player:
                         count += 1
                     else:
                         break
