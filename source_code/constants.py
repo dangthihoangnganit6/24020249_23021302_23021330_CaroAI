@@ -15,3 +15,4 @@ SCORES = {
 }
 
 MAX_DEPTH = 3  # Độ sâu tìm kiếm
+NEIGHBOR_RADIUS = 2  # Phạm vi tìm kiếm xung quanh quân đã đánh

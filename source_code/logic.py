@@ -61,4 +61,41 @@ def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai th
                     score += SCORES['AI_2'] if is_ai else SCORES['PLAYER_2']
     return score
 
+def get_refined_moves(board):
+    """
+    Chỉ sinh các nước đi gần các quân đã đánh (Candidate Moves) 
+    và sắp xếp theo thứ tự ưu tiên gần tâm bàn cờ.
+    """
+    from constants import NEIGHBOR_RADIUS
+    
+    occupied_positions = []
+    for r in range(BOARD_SIZE):
+        for c in range(BOARD_SIZE):
+            if board[r][c] != EMPTY:
+                occupied_positions.append((r, c))
+    
+    # Nếu bàn cờ trống, ưu tiên đánh vào trung tâm
+    if not occupied_positions:
+        center = BOARD_SIZE // 2
+        return [[center, center]]
+    
+    candidates = set()
+    for r, c in occupied_positions:
+        # Xét các ô trong phạm vi bán kính NEIGHBOR_RADIUS
+        for dr in range(-NEIGHBOR_RADIUS, NEIGHBOR_RADIUS + 1):
+            for dc in range(-NEIGHBOR_RADIUS, NEIGHBOR_RADIUS + 1):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < BOARD_SIZE and 0 <= nc < BOARD_SIZE:
+                    if board[nr][nc] == EMPTY:
+                        candidates.add((nr, nc))
+    
+    # Chuyển set sang list và sắp xếp theo khoảng cách đến tâm (4, 4)
+    center_r, center_c = BOARD_SIZE // 2, BOARD_SIZE // 2
+    sorted_candidates = sorted(
+        list(candidates),
+        key=lambda pos: (pos[0] - center_r)**2 + (pos[1] - center_c)**2
+    )
+    
+    return [list(pos) for pos in sorted_candidates]
+
 
