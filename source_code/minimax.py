@@ -60,6 +60,14 @@ def get_best_move_minimax(board, ai_piece, depth=MAX_DEPTH):
             
     end_time = time.time()
     
+    stats = {
+        'move': best_move,
+        'score': best_score,
+        'depth': depth,
+        'states': xet_trang_thai,
+        'time': end_time - start_time
+    }
+    
     if best_move:
         print(f"\n[MINIMAX AI ({ai_piece})] Đã chọn nước đi: Hàng {best_move[0]}, Cột {best_move[1]}")
         print(f"- Điểm đánh giá (Heuristic): {best_score}")
@@ -68,6 +76,6 @@ def get_best_move_minimax(board, ai_piece, depth=MAX_DEPTH):
         print(f"- Thời gian chạy: {end_time - start_time:.4f} giây")
         print("-" * 40)
         
-    return best_move
+    return best_move, stats
 
 

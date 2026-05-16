@@ -14,7 +14,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
     
     human_piece = 'O' if ai_piece == 'X' else 'X'
     
-    # Xét trạng thái kết thúc
+    # Xét trạng thái kết thúc (Thắng/Thua/Hòa)
     winner = check_win(board)
     if winner == ai_piece:
         return SCORES['WIN'] + depth
@@ -26,7 +26,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
     if depth == 0:
         return Tinh_Diem(board, ai_piece, human_piece)
     
-    # Sử dụng chung bộ sinh nước đi đã tối ưu
+    # Lấy danh sách nước đi đã được tối ưu hóa (Candidate Moves)
     valid_moves = get_refined_moves(board)
     
     if is_maximizing:
@@ -39,7 +39,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             best_score = max(score, best_score)
             alpha = max(alpha, best_score)
             
-            # Cắt tỉa Alpha-Beta
+            # Cắt tỉa nhánh: Nếu giá trị tốt nhất của Max vượt quá giới hạn Min cho phép
             if beta <= alpha:
                 break
         return best_score
@@ -53,26 +53,29 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             best_score = min(score, best_score)
             beta = min(beta, best_score)
             
-            # Cắt tỉa Alpha-Beta
+            # Cắt tỉa nhánh: Nếu giá trị tệ nhất của Min nhỏ hơn giới hạn Max có thể nhận
             if beta <= alpha:
                 break
         return best_score
 
 def get_best_move_alphabeta(board, ai_piece, depth=MAX_DEPTH):
     """
-    Hàm tìm nước đi tốt nhất sử dụng Alpha-Beta Pruning.
+    Hàm tìm nước đi tốt nhất sử dụng Alpha-Beta Pruning và trả về Benchmark stats.
     """
     global xet_trang_thai
     xet_trang_thai = 0
     start_time = time.time()
     
-    best_score = -math.inf
-    best_move = None
     alpha = -math.inf
     beta = math.inf
+    best_score = -math.inf
     
-    # Sử dụng chung bộ sinh nước đi đã tối ưu
     valid_moves = get_refined_moves(board)
+    if not valid_moves:
+        return None, None
+        
+    # Khởi tạo nước đi mặc định là nước đầu tiên để tránh lỗi None
+    best_move = valid_moves[0]
     
     for row, column in valid_moves:
         board[row][column] = ai_piece
@@ -83,9 +86,19 @@ def get_best_move_alphabeta(board, ai_piece, depth=MAX_DEPTH):
             best_score = score
             best_move = (row, column)
             
+        # Cập nhật alpha cho nhánh tiếp theo
         alpha = max(alpha, best_score)
             
     end_time = time.time()
+    
+    # Tạo dictionary thông số Benchmark chuẩn để main.py xử lý
+    stats = {
+        'move': best_move,
+        'score': best_score,
+        'depth': depth,
+        'states': xet_trang_thai,
+        'time': end_time - start_time
+    }
     
     if best_move:
         print(f"\n[ALPHA-BETA AI ({ai_piece})] Đã chọn nước đi: Hàng {best_move[0]}, Cột {best_move[1]}")
@@ -95,4 +108,4 @@ def get_best_move_alphabeta(board, ai_piece, depth=MAX_DEPTH):
         print(f"- Thời gian chạy: {end_time - start_time:.4f} giây")
         print("-" * 40)
         
-    return best_move
+    return best_move, stats
