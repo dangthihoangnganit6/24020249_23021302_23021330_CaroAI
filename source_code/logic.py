@@ -63,8 +63,10 @@ def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai th
 
 def get_refined_moves(board):
     """
-    Chỉ sinh các nước đi gần các quân đã đánh (Candidate Moves) 
-    và sắp xếp theo thứ tự ưu tiên gần tâm bàn cờ.
+    Chỉ sinh các nước đi gần các quân đã đánh (Candidate Moves).
+    Sắp xếp theo thứ tự ưu tiên: 
+    1. Ô có khả năng tạo chuỗi (gần nhiều quân cờ khác).
+    2. Ô gần tâm bàn cờ.
     """
     from constants import NEIGHBOR_RADIUS
     
@@ -81,7 +83,6 @@ def get_refined_moves(board):
     
     candidates = set()
     for r, c in occupied_positions:
-        # Xét các ô trong phạm vi bán kính NEIGHBOR_RADIUS
         for dr in range(-NEIGHBOR_RADIUS, NEIGHBOR_RADIUS + 1):
             for dc in range(-NEIGHBOR_RADIUS, NEIGHBOR_RADIUS + 1):
                 nr, nc = r + dr, c + dc
@@ -89,12 +90,28 @@ def get_refined_moves(board):
                     if board[nr][nc] == EMPTY:
                         candidates.add((nr, nc))
     
-    # Chuyển set sang list và sắp xếp theo khoảng cách đến tâm (4, 4)
+    # Hàm tính độ ưu tiên: Càng gần quân đã đánh và càng gần tâm càng tốt
     center_r, center_c = BOARD_SIZE // 2, BOARD_SIZE // 2
-    sorted_candidates = sorted(
-        list(candidates),
-        key=lambda pos: (pos[0] - center_r)**2 + (pos[1] - center_c)**2
-    )
+    
+    def move_priority(pos):
+        r, c = pos
+        # Ưu tiên 1: Số lượng quân cờ xung quanh (phạm vi 1 ô)
+        nearby_count = 0
+        for dr in range(-1, 2):
+            for dc in range(-1, 2):
+                if dr == 0 and dc == 0: continue
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < BOARD_SIZE and 0 <= nc < BOARD_SIZE:
+                    if board[nr][nc] != EMPTY:
+                        nearby_count += 1
+        
+        # Ưu tiên 2: Khoảng cách đến tâm
+        dist_to_center = (r - center_r)**2 + (c - center_c)**2
+        
+        # Trả về tuple để sắp xếp: nearby_count giảm dần (nên để dấu âm), dist_to_center tăng dần
+        return (-nearby_count, dist_to_center)
+    
+    sorted_candidates = sorted(list(candidates), key=move_priority)
     
     return [list(pos) for pos in sorted_candidates]
 
