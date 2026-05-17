@@ -61,6 +61,33 @@ def Tinh_Diem(board, ai_piece, human_piece): #Tính điểm để sét xem ai th
                     score += SCORES['AI_2'] if is_ai else SCORES['PLAYER_2']
     return score
 
+def get_max_chain(board, r, c, piece):
+    """
+    Hàm tính toán độ dài chuỗi liên tiếp tối đa nếu đặt quân 'piece' vào ô (r, c).
+    Quét theo 4 trục hướng: Ngang, Dọc, Chéo chính, Chéo phụ.
+    """
+    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
+    max_len = 0
+    for dr, dc in directions:
+        count = 1
+        # Hướng dương
+        for i in range(1, WIN_COUNT):
+            nr, nc = r + dr * i, c + dc * i
+            if 0 <= nr < BOARD_SIZE and 0 <= nc < BOARD_SIZE and board[nr][nc] == piece:
+                count += 1
+            else:
+                break
+        # Hướng âm
+        for i in range(1, WIN_COUNT):
+            nr, nc = r - dr * i, c - dc * i
+            if 0 <= nr < BOARD_SIZE and 0 <= nc < BOARD_SIZE and board[nr][nc] == piece:
+                count += 1
+            else:
+                break
+        if count > max_len:
+            max_len = count
+    return max_len
+
 def get_refined_moves(board):
     """
     Chỉ sinh các nước đi gần các quân đã đánh (Candidate Moves).
@@ -76,11 +103,12 @@ def get_refined_moves(board):
             if board[r][c] != EMPTY:
                 occupied_positions.append((r, c))
     
-    # Nếu bàn cờ trống, ưu tiên đánh vào trung tâm
+    # Ưu tiên ô trung tâm nếu bàn cờ trống
     if not occupied_positions:
         center = BOARD_SIZE // 2
         return [[center, center]]
     
+    # Cải tiến: Chỉ sinh nước đi gần những quân đã đánh (Giới hạn vùng lân cận)
     candidates = set()
     for r, c in occupied_positions:
         for dr in range(-NEIGHBOR_RADIUS, NEIGHBOR_RADIUS + 1):
@@ -90,12 +118,18 @@ def get_refined_moves(board):
                     if board[nr][nc] == EMPTY:
                         candidates.add((nr, nc))
     
-    # Hàm tính độ ưu tiên: Càng gần quân đã đánh và càng gần tâm càng tốt
     center_r, center_c = BOARD_SIZE // 2, BOARD_SIZE // 2
     
     def move_priority(pos):
         r, c = pos
-        # Ưu tiên 1: Số lượng quân cờ xung quanh (phạm vi 1 ô)
+        
+        # CẢI TIẾN: Ưu tiên xét các ô có khả năng tạo chuỗi 2, 3 hoặc 4 quân
+        # Tính toán cho cả 'X' và 'O' để AI vừa biết tấn công, vừa biết chặn thủ
+        max_chain_X = get_max_chain(board, r, c, 'X')
+        max_chain_O = get_max_chain(board, r, c, 'O')
+        best_chain = max(max_chain_X, max_chain_O)
+        
+        # Giữ lại đếm mật độ quân lân cận (ô nóng) làm trọng số phụ
         nearby_count = 0
         for dr in range(-1, 2):
             for dc in range(-1, 2):
@@ -105,11 +139,14 @@ def get_refined_moves(board):
                     if board[nr][nc] != EMPTY:
                         nearby_count += 1
         
-        # Ưu tiên 2: Khoảng cách đến tâm
+        # Ưu tiên xét các ô gần trung tâm bàn cờ
         dist_to_center = (r - center_r)**2 + (c - center_c)**2
         
-        # Trả về tuple để sắp xếp: nearby_count giảm dần (nên để dấu âm), dist_to_center tăng dần
-        return (-nearby_count, dist_to_center)
+        # Trả về tuple phân cấp rõ ràng để sắp xếp: 
+        # Trọng số 1: Chuỗi tạo thành lớn nhất (giảm dần -> âm)
+        # Trọng số 2: Mật độ quân xung quanh đông nhất (giảm dần -> âm)
+        # Trọng số 3: Khoảng cách đến tâm nhỏ nhất (tăng dần -> dương)
+        return (-best_chain, -nearby_count, dist_to_center)
     
     sorted_candidates = sorted(list(candidates), key=move_priority)
     

@@ -7,6 +7,7 @@ xet_trang_thai = 0
 
 def minimax(board, depth, is_maximizing, ai_piece):
     global xet_trang_thai
+    # Ghi nhận số trạng thái đã xét
     xet_trang_thai += 1
     
     human_piece = 'O' if ai_piece == 'X' else 'X'
@@ -77,5 +78,3 @@ def get_best_move_minimax(board, ai_piece, depth=MAX_DEPTH):
         print("-" * 40)
         
     return best_move, stats
-
-

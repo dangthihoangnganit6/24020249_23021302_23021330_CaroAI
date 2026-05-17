@@ -10,6 +10,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
     Thuật toán Alpha-Beta Pruning để cắt tỉa các nhánh vô hiệu.
     """
     global xet_trang_thai
+    # Ghi nhận số trạng thái đã xét mỗi khi đệ quy vào một node mới
     xet_trang_thai += 1
     
     human_piece = 'O' if ai_piece == 'X' else 'X'
@@ -30,6 +31,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
     valid_moves = get_refined_moves(board)
     
     if is_maximizing:
+        # Máy (MAX) cố gắng tối đa hóa điểm số
         best_score = -math.inf
         for row, column in valid_moves:
             board[row][column] = ai_piece
@@ -37,13 +39,15 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             board[row][column] = EMPTY
             
             best_score = max(score, best_score)
+            # alpha là giá trị tốt nhất hiện tại của người chơi MAX
             alpha = max(alpha, best_score)
             
-            # Cắt tỉa nhánh: Nếu giá trị tốt nhất của Max vượt quá giới hạn Min cho phép
+            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh vô hiệu
             if beta <= alpha:
                 break
         return best_score
     else:
+        # Người chơi (MIN) cố gắng giảm thiểu điểm số của MAX
         best_score = math.inf
         for row, column in valid_moves:
             board[row][column] = human_piece
@@ -51,9 +55,10 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             board[row][column] = EMPTY
             
             best_score = min(score, best_score)
+            # beta là giá trị tốt nhất hiện tại của người chơi MIN
             beta = min(beta, best_score)
             
-            # Cắt tỉa nhánh: Nếu giá trị tệ nhất của Min nhỏ hơn giới hạn Max có thể nhận
+            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh vô hiệu
             if beta <= alpha:
                 break
         return best_score
