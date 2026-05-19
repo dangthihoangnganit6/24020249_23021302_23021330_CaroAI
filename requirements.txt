@@ -1,0 +1,4 @@
+# Dự án sử dụng hoàn toàn thư viện tiêu chuẩn của Python.
+# Không có thư viện bên thứ ba (đối với môi trường Windows/macOS)
+# Đối với Linux (Ubuntu), hãy đảm bảo đã cài đặt python3-tk:
+# sudo apt-get install python3-tk
