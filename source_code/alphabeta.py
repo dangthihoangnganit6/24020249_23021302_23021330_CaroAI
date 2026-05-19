@@ -7,7 +7,7 @@ xet_trang_thai = 0
 
 def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
     """
-    Thuật toán Alpha-Beta Pruning để cắt tỉa các nhánh vô hiệu.
+    Thuật toán Alpha-Beta Pruning để cắt tỉa các nhánh.
     """
     global xet_trang_thai
     # Ghi nhận số trạng thái đã xét mỗi khi đệ quy vào một node mới
@@ -42,7 +42,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             # alpha là giá trị tốt nhất hiện tại của người chơi MAX
             alpha = max(alpha, best_score)
             
-            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh vô hiệu
+            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh
             if beta <= alpha:
                 break
         return best_score
@@ -58,7 +58,7 @@ def alpha_beta(board, depth, alpha, beta, is_maximizing, ai_piece):
             # beta là giá trị tốt nhất hiện tại của người chơi MIN
             beta = min(beta, best_score)
             
-            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh vô hiệu
+            # Điều kiện cắt nhánh: Nếu beta <= alpha thì tiến hành cắt nhánh
             if beta <= alpha:
                 break
         return best_score
